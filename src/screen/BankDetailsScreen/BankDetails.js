@@ -1,0 +1,348 @@
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  ScrollView,
+  ColorPropType,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native';
+import React, {useState, useEffect, useMemo} from 'react';
+import {styles} from './styles';
+import {font} from '../../common/Font';
+import {color} from '../../common/color';
+
+import Appheader from '../../component/AppHeader/appheader';
+import BankTopTab from '../../navigation/BankDetailsTopTab/BankTopTab';
+import Chandlechart from '../../../assets/svg/chandlechart';
+import Linechartlogo from '../../../assets/svg/linechartlogo';
+import Download from '../../../assets/svg/download';
+import useStore from '../../../store';
+import CustomSellModal from '../../component/CustomModal/CustomSellModal';
+import GetAPI from '../../api/GetAPI';
+import Loader from '../../component/Loader/Loader';
+import checkNonEmpty from '../../utils/checkNonEmpty';
+import ErrorMessage from '../../component/ErrorMessage/ErrorMessage';
+import CalculatePercentage from '../../utils/CalculatePercentage';
+import {useSelector} from 'react-redux';
+import getSocketData from '../../utils/getSocketData';
+import Debounce from '../../utils/Debounce';
+import priceFormat from '../../utils/priceFormat';
+
+const BankDetails = ({navigation, route}) => {
+  const symbol = route?.params?.symbol;
+  const viewMode = route?.params?.viewMode;
+  const {show} = useStore();
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [iscolor, setIsColor] = useState('');
+  const [istext, setIsText] = useState('BUY');
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [quantity, setQuantity] = useState(1);
+  const [price, setPrice] = useState(0);
+  const [allData, setAllData] = useState([]);
+  const {watchList, watchListFailed, stockListSocket} = useSelector(
+    state => state.stockData,
+  );
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        setLoading(true);
+        const response = await GetAPI.getOneStockData({
+          data: symbol,
+          formattedObj: false,
+        });
+        setData(response?.meta);
+        setPrice(response?.meta?.regularMarketPrice);
+        setAllData(response);
+        setLoading(false);
+      } catch (error) {
+        setData([]);
+        console.log(error);
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, []);
+
+  const fetchStock = async () => {
+    try {
+      setLoading(true);
+      const response = await GetAPI.getOneStockData({
+        data: symbol,
+        formattedObj: false,
+      });
+      setData(response?.meta);
+      setPrice(response?.meta?.regularMarketPrice);
+      setAllData(response);
+      setLoading(false);
+    } catch (error) {
+      setData([]);
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    const ws = new WebSocket('wss://streamer.finance.yahoo.com');
+
+    ws.onopen = function open() {
+      console.log('connected details');
+      ws.send(
+        JSON.stringify({
+          subscribe: [symbol],
+        }),
+      );
+    };
+
+    ws.onclose = function close() {
+      console.log('disconnected details');
+    };
+
+    ws.onmessage = async function incoming(message) {
+      try {
+        const stockData = await Debounce({
+          func: async () => {
+            const result = await getSocketData({message});
+            return result;
+          },
+          delay: 800,
+        });
+        setData(stockData[0]);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  }, []);
+
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
+
+  return (
+    <>
+      {loading ? (
+        <Loader loading={loading} />
+      ) : checkNonEmpty(data) ? (
+        <SafeAreaView style={styles.container}>
+          <Appheader
+            onPress={() => navigation.goBack()}
+            header={data?.symbol}
+          />
+
+          <ScrollView style={styles.mainscroll}>
+            <View style={styles.toptextview}>
+              <View style={styles.subview}>
+                <Text style={styles.numbertext}>
+                  ₹{priceFormat(data?.regularMarketPrice)}
+                </Text>
+                {/* <View style={styles.nseview}>
+                  <Text
+                    style={[
+                      styles.nseText,
+                      {
+                        color: !focus ? color.color_black : color.color_white,
+                        backgroundColor: focus ? color.color_green : '#C6C6C6',
+                      },
+                    ]}
+                    onPress={() => setFocus(!false)}>
+                    NSE
+                  </Text>
+                  <Text
+                    style={[
+                      styles.nseText,
+                      {
+                        color: focus ? color.color_black : color.color_white,
+                        backgroundColor: focus ? '#C6C6C6' : color.color_green,
+                      },
+                    ]}
+                    onPress={() => setFocus(!true)}>
+                    BSE
+                  </Text>
+                </View> */}
+              </View>
+
+              <View style={styles.subview}>
+                {/* <Text style={styles.rupeetext}>+30.00</Text> */}
+                <View style={styles.precentageview}>
+                  <Text style={styles.baracket}>(</Text>
+                  <Text
+                    style={[
+                      styles.percentagetext,
+                      {
+                        color: data?.changePercent
+                          ? data?.changePercent < 0
+                            ? color.color_red
+                            : color.color_green
+                          : CalculatePercentage({
+                              initialValue: data?.previousClose,
+                              finalValue: data?.regularMarketPrice,
+                            }) < 0
+                          ? color.color_red
+                          : color.color_green,
+                      },
+                    ]}>
+                    {data?.changePercent
+                      ? `${data?.changePercent.toFixed(2)}`
+                      : CalculatePercentage({
+                          initialValue: data?.previousClose,
+                          finalValue: data?.regularMarketPrice,
+                        })}
+                    %
+                  </Text>
+                  <Text style={styles.baracket}>)</Text>
+                </View>
+              </View>
+            </View>
+
+            <View style={styles.horizontalline} />
+
+            <Text style={styles.charttext}>Chart</Text>
+
+            <View style={styles.marketview}>
+              <BankTopTab />
+              <TouchableOpacity style={{paddingTop: 10}} onPress={show}>
+                <Linechartlogo />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{paddingTop: 9, paddingLeft: 5}}
+                onPress={show}>
+                <Chandlechart />
+              </TouchableOpacity>
+              <View style={{paddingTop: 13}}>
+                <Download />
+              </View>
+            </View>
+
+            <View style={styles.horizontalline} />
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontFamily: font.nunitobold,
+                color: color.color_black,
+                paddingHorizontal: 12,
+                paddingTop: 5,
+              }}>
+              Market Depth
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                paddingHorizontal: 12,
+                paddingTop: 15,
+              }}>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Bid</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>Total</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Offer</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Qty</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+                <Text style={styles.bidblue}>0.00</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Offer</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>Total</Text>
+              </View>
+
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Order</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+              </View>
+              <View style={{flexDirection: 'column'}}>
+                <Text style={styles.bidtext}>Qty</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+                <Text style={styles.bidred}>0.00</Text>
+              </View>
+            </View>
+
+            <View style={styles.horizontalline} />
+
+            {!viewMode && (
+              <View style={styles.buttonmain}>
+                <TouchableOpacity
+                  style={styles.buytext}
+                  onPress={() => {
+                    setIsColor(color.color_darkblue),
+                      setModalVisible(true),
+                      setIsText('BUY');
+                  }}>
+                  <Text style={styles.sametext}>BUY</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.selltext}
+                  onPress={() => {
+                    setIsColor(color.color_red),
+                      setModalVisible(true),
+                      setIsText('SELL');
+                  }}>
+                  <Text style={styles.sametext}>SELL</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+            <CustomSellModal
+              quantity={quantity}
+              percentage={
+                data?.changePercent
+                  ? `${data?.changePercent.toFixed(2)}`
+                  : CalculatePercentage({
+                      initialValue: data?.previousClose,
+                      finalValue: data?.regularMarketPrice,
+                    })
+              }
+              symbol={data?.symbol}
+              stockPrice={data?.regularMarketPrice}
+              price={price}
+              getQuantity={setQuantity}
+              modalshow={isModalVisible}
+              onPressClose={toggleModal}
+              maincolor={iscolor}
+              leadtext={istext}
+              onPriceChange={setPrice}
+            />
+          </ScrollView>
+        </SafeAreaView>
+      ) : (
+        <ErrorMessage onPress={fetchStock} message={'Something went wrong!'} />
+      )}
+    </>
+  );
+};
+
+export default BankDetails;
