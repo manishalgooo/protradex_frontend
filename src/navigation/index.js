@@ -49,6 +49,12 @@ import Debounce from '../utils/Debounce';
 import getSocketData from '../utils/getSocketData';
 import SearchPage from './SearchPage/SearchPage';
 import Details from './Fund/Details';
+import OPtionChain from '../screen/OptionChain/OPtionChain';
+import MCX from '../screen/MCX_Market/MCX';
+import Futures from '../screen/Future/Future';
+import Deposit from '../screen/Deposit/Deposit';
+import Withdrawal from '../screen/Withdrawal/Withdrawal';
+import Submited from '../screen/Submited/Submited';
 
 export const Auth = () => {
   const Stack = createNativeStackNavigator();
@@ -138,10 +144,19 @@ export const MainStack = () => {
       <Stack.Screen name="Auth" component={Auth} />
       <Stack.Screen name="Details" component={Details} />
       <Stack.Screen name="Tabstack" component={Tabstack} />
+      <Stack.Screen name="OptionChain" component={OPtionChain} />
+      <Stack.Screen name="MCXMaket" component={MCX} />
+      <Stack.Screen name="Submited" component={Submited} />
+
+      <Stack.Screen name="Futures" component={Futures} />
       <Stack.Screen name="InformationScreen" component={InformationScreen} />
+      <Stack.Screen name="Deposit" component={Deposit} />
+      <Stack.Screen name="Withdrawal" component={Withdrawal} />
+
       <Stack.Screen name="VerifyNumberScreen" component={VerifyNumberScreen} />
       <Stack.Screen name="TabVarificationPin" component={TabVarificationPin} />
       <Stack.Screen name="WellDone" component={WellDone} />
+
       <Stack.Screen name="TabSecurity" component={TabSecurity} />
       <Stack.Screen name="TabChangePassword" component={TabChangePassword} />
       <Stack.Screen name="SecurityWellDone" component={SecurityWellDone} />

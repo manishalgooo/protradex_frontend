@@ -39,6 +39,33 @@ const GetAPI = {
       }
     });
   },
+  getOptoinData: async ({data, formattedObj = true}) => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        await checkInternet();
+        const url = STOCK.GET_OPTION_DATA(data);
+        const response = await fetch(url);
+
+        const results = await response.json();
+
+        const fullMetaObject = results?.records[0];
+
+        if (!formattedObj) {
+          resolve(fullMetaObject);
+        }
+
+        // resolve(filteredMetaObject);
+      } catch (error) {
+        if (error?.response?.data?.message) {
+          console.log(error?.response?.data?.message);
+          reject(error.response.data);
+          return;
+        }
+        console.log('heheh', error);
+        reject(error);
+      }
+    });
+  },
 };
 
 export default GetAPI;

@@ -21,6 +21,8 @@ export const STOCK = {
   DECODE_STOCK_DATA: `${baseURL}/market/decodestockdata`,
   SQUARE_OFF: `${baseURL}/market/squareoff`,
   DELETE_STOCK: `${baseURL}/market/deletestock/`,
+  GET_OPTION_DATA: symbol =>
+    `https://www.nseindia.com/api/option-chain-indices?symbol=${symbol}`,
   GET_ONE_STOCK_DATA: symbol =>
     `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}`,
   SEARCH_STOCKS: symbol =>

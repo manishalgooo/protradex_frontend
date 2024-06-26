@@ -31,6 +31,8 @@ import {useSelector} from 'react-redux';
 import getSocketData from '../../utils/getSocketData';
 import Debounce from '../../utils/Debounce';
 import priceFormat from '../../utils/priceFormat';
+import {createChart} from 'lightweight-charts';
+import {black} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
 
 const BankDetails = ({navigation, route}) => {
   const symbol = route?.params?.symbol;
@@ -48,6 +50,7 @@ const BankDetails = ({navigation, route}) => {
     state => state.stockData,
   );
 
+  // console.log(allData);
   useEffect(() => {
     const fetch = async () => {
       try {
@@ -77,6 +80,7 @@ const BankDetails = ({navigation, route}) => {
         formattedObj: false,
       });
       setData(response?.meta);
+
       setPrice(response?.meta?.regularMarketPrice);
       setAllData(response);
       setLoading(false);
@@ -217,7 +221,30 @@ const BankDetails = ({navigation, route}) => {
                 <Download />
               </View>
             </View>
-
+            <View style={styles.horizontalline} />
+            <TouchableOpacity
+              style={{
+                backgroundColor: color.FACEBOOK_BLUE,
+                borderRadius: 100,
+                marginHorizontal: 10,
+                marginVertical: 15,
+              }}
+              onPress={() =>
+                navigation.navigate('OptionChain', {
+                  symbol: symbol,
+                })
+              }>
+              <Text
+                style={{
+                  color: color.color_white,
+                  fontFamily: font.nunitobold,
+                  fontSize: 18,
+                  padding: 10,
+                  textAlign: 'center',
+                }}>
+                Future Option
+              </Text>
+            </TouchableOpacity>
             <View style={styles.horizontalline} />
 
             <Text

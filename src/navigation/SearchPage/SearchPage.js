@@ -20,9 +20,11 @@ import checkNonEmpty from '../../utils/checkNonEmpty';
 import Loader from '../../component/Loader/Loader';
 import Icon from 'react-native-vector-icons/AntDesign';
 import PostAPI from '../../api/PostAPI';
+import Icons from 'react-native-vector-icons/Entypo';
 import {getWatchList} from '../../redux/slice/StockDataSlice';
 import Spinner from '../../component/Spinner/Spinner';
 import DeleteAPI from '../../api/DeleteAPI';
+import {fill} from 'lodash';
 
 const SearchPage = ({navigation}) => {
   const {watchList, searchedStocks, searchLoading, searchStocksFailed} =
@@ -132,12 +134,123 @@ const SearchPage = ({navigation}) => {
         />
       ) : (
         <>
-          <View
-            style={[
-              styles.container,
-              {justifyContent: 'center', alignItems: 'center'},
-            ]}>
-            <Text>Search Something...</Text>
+          <View style={{width: '100%', height: '100%'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'space-around',
+              }}>
+              <TouchableOpacity
+                style={{
+                  borderColor: color.color_gray,
+
+                  borderStyle: 'solid',
+                  borderWidth: 1,
+                  paddingVertical: 5,
+
+                  width: '40%',
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                  flexDirection: 'row',
+                }}
+                onPress={() => navigation.navigate('OptionChain')}>
+                <Icons name={'line-graph'} />
+                <Text
+                  style={{
+                    fontSize: 18,
+                  }}>
+                  Options
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={{
+                  borderColor: color.color_gray,
+
+                  borderStyle: 'solid',
+                  borderWidth: 1,
+                  paddingVertical: 5,
+
+                  width: '40%',
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                  flexDirection: 'row',
+                }}
+                onPress={() => navigation.navigate('Futures')}>
+                <Icons name={'line-graph'} />
+                <Text
+                  style={{
+                    fontSize: 18,
+                  }}>
+                  Future
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginVertical: 10,
+                justifyContent: 'space-around',
+              }}>
+              <TouchableOpacity
+                style={{
+                  borderColor: color.color_gray,
+                  borderStyle: 'solid',
+                  borderWidth: 1,
+                  paddingVertical: 5,
+
+                  width: '40%',
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                  flexDirection: 'row',
+                }}
+                onPress={() => navigation.navigate('MCXMaket')}>
+                <Icons name={'line-graph'} />
+
+                <Text
+                  style={{
+                    fontSize: 18,
+                  }}>
+                  MCX
+                </Text>
+              </TouchableOpacity>
+              {/* <TouchableOpacity
+                style={{
+                  borderColor: color.color_gray,
+
+                  borderStyle: 'solid',
+                  borderWidth: 1,
+                  paddingVertical: 5,
+
+                  width: '50%',
+                  borderRadius: 100,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  gap: 10,
+                  flexDirection: 'row',
+                }}>
+                <Icons name={'line-graph'} />
+                <Text
+                  style={{
+                    fontSize: 18,
+                  }}>
+                  Future
+                </Text>
+              </TouchableOpacity> */}
+            </View>
+            <View
+              style={[
+                styles.container,
+                {justifyContent: 'center', alignItems: 'center'},
+              ]}>
+              <Text>Search Something...</Text>
+            </View>
           </View>
         </>
       )}

@@ -111,23 +111,24 @@ const WatchlistScreen = ({navigation}) => {
             </TouchableOpacity>
           </View>
           <Seperator seperate={15} />
-          <View style={styles.containerSec}>
-            <View style={styles.headerContainer}>
-              <Text style={styles.headerText}>Stocks</Text>
-            </View>
-            <OptimizedFlatlist
-              contentContainerStyle={{gap: 10}}
-              renderItem={renderItem}
-              data={stockListSocket}
-            />
-            {/* <FlatList
+          <ScrollView>
+            <View style={styles.containerSec}>
+              <View style={styles.headerContainer}>
+                <Text style={styles.headerText}>Stocks</Text>
+              </View>
+              <OptimizedFlatlist
+                contentContainerStyle={{gap: 10}}
+                renderItem={renderItem}
+                data={stockListSocket}
+              />
+              {/* <FlatList
                 nestedScrollEnabled
                 // refreshControl={<Refresh apiToRefresh={getWatchList} />}
 
                 renderItem={renderItem}
                 keyExtractor={(_, i) => i.toString()}
               /> */}
-            {/* <View
+              {/* <View
             style={{
               borderBottomColor: color.color_gray,
               borderBottomWidth: 1,
@@ -524,7 +525,8 @@ const WatchlistScreen = ({navigation}) => {
               </View>
             </View>
           </View> */}
-          </View>
+            </View>
+          </ScrollView>
           {/* </ScrollView> */}
         </SafeAreaView>
       ) : (

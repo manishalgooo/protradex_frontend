@@ -53,6 +53,38 @@ const AccountScreen = ({navigation}) => {
                 </Text>
                 <Right />
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.touchview}
+                onPress={() => {
+                  navigation.navigate('Deposit');
+                }}>
+                <Text
+                  style={{
+                    fontSize: 19,
+                    fontWeight: '600',
+                    color: color.color_lightblack,
+                    fontFamily: font.nunitoregular,
+                  }}>
+                  Deposit
+                </Text>
+                <Right />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.touchview}
+                onPress={() => {
+                  navigation.navigate('Withdrawal');
+                }}>
+                <Text
+                  style={{
+                    fontSize: 19,
+                    fontWeight: '600',
+                    color: color.color_lightblack,
+                    fontFamily: font.nunitoregular,
+                  }}>
+                  withdrawal
+                </Text>
+                <Right />
+              </TouchableOpacity>
               {/* 
           <TouchableOpacity style={styles.touchview}  onPress={() => {
               navigation.navigate('VerifyNumberScreen');
