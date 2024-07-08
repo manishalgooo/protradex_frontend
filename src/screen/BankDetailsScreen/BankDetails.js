@@ -230,7 +230,7 @@ const BankDetails = ({navigation, route}) => {
                 marginVertical: 15,
               }}
               onPress={() =>
-                navigation.navigate('OptionChain', {
+                navigation.navigate('Chart', {
                   symbol: symbol,
                 })
               }>
@@ -242,7 +242,7 @@ const BankDetails = ({navigation, route}) => {
                   padding: 10,
                   textAlign: 'center',
                 }}>
-                Future Option
+                Chart
               </Text>
             </TouchableOpacity>
             <View style={styles.horizontalline} />
