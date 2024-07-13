@@ -141,7 +141,7 @@ const SearchPage = ({navigation}) => {
                 marginVertical: 10,
                 justifyContent: 'space-around',
               }}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   borderColor: color.color_gray,
 
@@ -164,7 +164,7 @@ const SearchPage = ({navigation}) => {
                   }}>
                   Options
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={{
                   borderColor: color.color_gray,

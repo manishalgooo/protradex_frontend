@@ -3,21 +3,20 @@ import {SafeAreaView, Text, View} from 'react-native';
 import Appheader from '../../component/AppHeader/appheader';
 import {WebView} from 'react-native-webview';
 import {styles} from './styles';
-import SelectOptions from './SelectOptions';
+// import SelectOptions from './SelectOptions';
 import {color} from '../../common/color';
 import HorizontalSeperator from '../MatualFunds/Components/HorizontalSeperator';
 import CalculatePercentage from '../../utils/CalculatePercentage';
 import priceFormat from '../../utils/priceFormat';
-import OptionChainTabel from './OptionChainTabel';
+
 import axios from 'axios';
 import {SelectList} from 'react-native-dropdown-select-list';
-const OPtionChain = ({navigation, route}) => {
-  const symbol = route?.params?.symbol;
+import MarketDepth from './MarketDepth';
+
+const MarketDepthData = ({symbol}) => {
   const resuly = symbol.replace(/\..*/, '');
   console.log(`symbol ${resuly}`);
   const indexes = ['NIFTY', 'FINNIFTY', 'BANKNIFTY', 'MIDCPNIFTY'];
-  const number = -10;
-  const textColor = number < 0 ? 'red' : 'green';
 
   const [date, setDate] = useState(new Date());
   const firstSymbol = 'Choose symbol';
@@ -112,15 +111,11 @@ const OPtionChain = ({navigation, route}) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
-        <Appheader onPress={() => navigation.goBack()} header="Option Chain" />
+      <HorizontalSeperator />
 
-        <HorizontalSeperator />
-
-        <HorizontalSeperator />
-        <OptionChainTabel symbol={resuly} data={instrumentData?.records} />
-      </SafeAreaView>
+      <HorizontalSeperator />
+      <MarketDepth symbol={resuly} data={instrumentData?.records} />
     </>
   );
 };
-export default OPtionChain;
+export default MarketDepthData;

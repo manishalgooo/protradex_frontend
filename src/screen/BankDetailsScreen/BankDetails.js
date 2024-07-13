@@ -33,10 +33,27 @@ import Debounce from '../../utils/Debounce';
 import priceFormat from '../../utils/priceFormat';
 import {createChart} from 'lightweight-charts';
 import {black} from 'react-native-paper/lib/typescript/styles/themes/v2/colors';
+import MarketDepth from './MarketDepth';
+import MarketDepthData from './Marketdepthdata';
+import WebView from 'react-native-webview';
+import HorizontalSeperator from '../MatualFunds/Components/HorizontalSeperator';
 
 const BankDetails = ({navigation, route}) => {
-  const symbol = route?.params?.symbol;
+  const [symbol, setSymbol] = useState(route?.params?.symbol);
+  useEffect(() => {
+    const symbolMapping = {
+      '^NSEI': 'NIFTY',
+      '^NSEBANK': 'BANKNIFTY',
+      'NIFTY_FIN_SERVICE.NS': 'FINNIFTY ',
+    };
+    if (symbol in symbolMapping) {
+      setSymbol(symbolMapping[symbol]);
+    }
+  }, [symbol]);
+  console.log(`test ${symbol}`);
+
   const viewMode = route?.params?.viewMode;
+  const resuly = symbol.replace(/\..*/, '');
   const {show} = useStore();
   const [isModalVisible, setModalVisible] = useState(false);
   const [iscolor, setIsColor] = useState('');
@@ -55,11 +72,13 @@ const BankDetails = ({navigation, route}) => {
     const fetch = async () => {
       try {
         setLoading(true);
+
         const response = await GetAPI.getOneStockData({
           data: symbol,
           formattedObj: false,
         });
         setData(response?.meta);
+        console.log(data);
         setPrice(response?.meta?.regularMarketPrice);
         setAllData(response);
         setLoading(false);
@@ -86,6 +105,7 @@ const BankDetails = ({navigation, route}) => {
       setLoading(false);
     } catch (error) {
       setData([]);
+
       console.log(error);
       setLoading(false);
     }
@@ -138,13 +158,12 @@ const BankDetails = ({navigation, route}) => {
             header={data?.symbol}
           />
 
-          <ScrollView style={styles.mainscroll}>
-            <View style={styles.toptextview}>
-              <View style={styles.subview}>
-                <Text style={styles.numbertext}>
-                  ₹{priceFormat(data?.regularMarketPrice)}
-                </Text>
-                {/* <View style={styles.nseview}>
+          <View style={styles.toptextview}>
+            <View style={styles.subview}>
+              <Text style={styles.numbertext}>
+                ₹{priceFormat(data?.regularMarketPrice)}
+              </Text>
+              {/* <View style={styles.nseview}>
                   <Text
                     style={[
                       styles.nseText,
@@ -168,202 +187,155 @@ const BankDetails = ({navigation, route}) => {
                     BSE
                   </Text>
                 </View> */}
-              </View>
+            </View>
 
-              <View style={styles.subview}>
-                {/* <Text style={styles.rupeetext}>+30.00</Text> */}
-                <View style={styles.precentageview}>
-                  <Text style={styles.baracket}>(</Text>
-                  <Text
-                    style={[
-                      styles.percentagetext,
-                      {
-                        color: data?.changePercent
-                          ? data?.changePercent < 0
-                            ? color.color_red
-                            : color.color_green
-                          : CalculatePercentage({
-                              initialValue: data?.previousClose,
-                              finalValue: data?.regularMarketPrice,
-                            }) < 0
+            <View style={styles.subview}>
+              {/* <Text style={styles.rupeetext}>+30.00</Text> */}
+              <View style={styles.precentageview}>
+                <Text style={styles.baracket}>(</Text>
+                <Text
+                  style={[
+                    styles.percentagetext,
+                    {
+                      color: data?.changePercent
+                        ? data?.changePercent < 0
                           ? color.color_red
-                          : color.color_green,
-                      },
-                    ]}>
-                    {data?.changePercent
-                      ? `${data?.changePercent.toFixed(2)}`
-                      : CalculatePercentage({
-                          initialValue: data?.previousClose,
-                          finalValue: data?.regularMarketPrice,
-                        })}
-                    %
-                  </Text>
-                  <Text style={styles.baracket}>)</Text>
-                </View>
+                          : color.color_green
+                        : CalculatePercentage({
+                            initialValue: data?.previousClose,
+                            finalValue: data?.regularMarketPrice,
+                          }) < 0
+                        ? color.color_red
+                        : color.color_green,
+                    },
+                  ]}>
+                  {data?.changePercent
+                    ? `${data?.changePercent.toFixed(2)}`
+                    : CalculatePercentage({
+                        initialValue: data?.previousClose,
+                        finalValue: data?.regularMarketPrice,
+                      })}
+                  %
+                </Text>
+                <Text style={styles.baracket}>)</Text>
               </View>
             </View>
+          </View>
 
-            <View style={styles.horizontalline} />
+          {/* <View style={styles.horizontalline} />
 
-            <Text style={styles.charttext}>Chart</Text>
+          <Text style={styles.charttext}>Chart</Text>
 
-            <View style={styles.marketview}>
-              <BankTopTab />
-              <TouchableOpacity style={{paddingTop: 10}} onPress={show}>
-                <Linechartlogo />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={{paddingTop: 9, paddingLeft: 5}}
-                onPress={show}>
-                <Chandlechart />
-              </TouchableOpacity>
-              <View style={{paddingTop: 13}}>
-                <Download />
-              </View>
-            </View>
-            <View style={styles.horizontalline} />
-            <TouchableOpacity
-              style={{
-                backgroundColor: color.FACEBOOK_BLUE,
-                borderRadius: 100,
-                marginHorizontal: 10,
-                marginVertical: 15,
-              }}
-              onPress={() =>
-                navigation.navigate('Chart', {
-                  symbol: symbol,
-                })
-              }>
-              <Text
-                style={{
-                  color: color.color_white,
-                  fontFamily: font.nunitobold,
-                  fontSize: 18,
-                  padding: 10,
-                  textAlign: 'center',
-                }}>
-                Chart
-              </Text>
-            </TouchableOpacity>
-            <View style={styles.horizontalline} />
-
+          <View style={styles.horizontalline} /> */}
+          {/* <TouchableOpacity
+            style={{
+              backgroundColor: color.FACEBOOK_BLUE,
+              borderRadius: 100,
+              marginHorizontal: 10,
+              marginVertical: 15,
+            }}
+            onPress={() =>
+              navigation.navigate('Chart', {
+                symbol: symbol,
+              })
+            }>
             <Text
               style={{
-                fontSize: 18,
+                color: color.color_white,
                 fontFamily: font.nunitobold,
-                color: color.color_black,
-                paddingHorizontal: 12,
-                paddingTop: 5,
+                fontSize: 18,
+                padding: 10,
+                textAlign: 'center',
               }}>
-              Market Depth
+              Chart
             </Text>
-            <View
+          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={{
+              backgroundColor: color.FACEBOOK_BLUE,
+              borderRadius: 100,
+              marginHorizontal: 10,
+              marginVertical: 15,
+            }}
+            onPress={() =>
+              navigation.navigate('OptionChain', {
+                symbol: symbol,
+              })
+            }>
+            <Text
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                paddingHorizontal: 12,
-                paddingTop: 15,
+                color: color.color_white,
+                fontFamily: font.nunitobold,
+                fontSize: 18,
+                padding: 10,
+                textAlign: 'center',
               }}>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Bid</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>Total</Text>
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Offer</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Qty</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-                <Text style={styles.bidblue}>0.00</Text>
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Offer</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>Total</Text>
-              </View>
+              Option Chain
+            </Text>
+          </TouchableOpacity>
+          {/* <View style={styles.horizontalline} />
 
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Order</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-              </View>
-              <View style={{flexDirection: 'column'}}>
-                <Text style={styles.bidtext}>Qty</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-                <Text style={styles.bidred}>0.00</Text>
-              </View>
+          <Text
+            style={{
+              fontSize: 18,
+              fontFamily: font.nunitobold,
+              color: color.color_black,
+              paddingHorizontal: 12,
+              paddingTop: 5,
+            }}>
+            Market Depth
+          </Text>
+
+          <View style={styles.horizontalline} /> */}
+
+          <CustomSellModal
+            quantity={quantity}
+            percentage={
+              data?.changePercent
+                ? `${data?.changePercent.toFixed(2)}`
+                : CalculatePercentage({
+                    initialValue: data?.previousClose,
+                    finalValue: data?.regularMarketPrice,
+                  })
+            }
+            symbol={data?.symbol}
+            stockPrice={data?.regularMarketPrice}
+            price={price}
+            getQuantity={setQuantity}
+            modalshow={isModalVisible}
+            onPressClose={toggleModal}
+            maincolor={iscolor}
+            leadtext={istext}
+            onPriceChange={setPrice}
+          />
+          <HorizontalSeperator />
+          <WebView
+            source={{
+              uri: `https://www.tradingview.com/chart/?symbol=${resuly}`,
+            }}
+          />
+          {!viewMode && (
+            <View style={styles.buttonmain}>
+              <TouchableOpacity
+                style={styles.buytext}
+                onPress={() => {
+                  setIsColor(color.color_darkblue),
+                    setModalVisible(true),
+                    setIsText('BUY');
+                }}>
+                <Text style={styles.sametext}>BUY</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.selltext}
+                onPress={() => {
+                  setIsColor(color.color_red),
+                    setModalVisible(true),
+                    setIsText('SELL');
+                }}>
+                <Text style={styles.sametext}>SELL</Text>
+              </TouchableOpacity>
             </View>
-
-            <View style={styles.horizontalline} />
-
-            {!viewMode && (
-              <View style={styles.buttonmain}>
-                <TouchableOpacity
-                  style={styles.buytext}
-                  onPress={() => {
-                    setIsColor(color.color_darkblue),
-                      setModalVisible(true),
-                      setIsText('BUY');
-                  }}>
-                  <Text style={styles.sametext}>BUY</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.selltext}
-                  onPress={() => {
-                    setIsColor(color.color_red),
-                      setModalVisible(true),
-                      setIsText('SELL');
-                  }}>
-                  <Text style={styles.sametext}>SELL</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-            <CustomSellModal
-              quantity={quantity}
-              percentage={
-                data?.changePercent
-                  ? `${data?.changePercent.toFixed(2)}`
-                  : CalculatePercentage({
-                      initialValue: data?.previousClose,
-                      finalValue: data?.regularMarketPrice,
-                    })
-              }
-              symbol={data?.symbol}
-              stockPrice={data?.regularMarketPrice}
-              price={price}
-              getQuantity={setQuantity}
-              modalshow={isModalVisible}
-              onPressClose={toggleModal}
-              maincolor={iscolor}
-              leadtext={istext}
-              onPriceChange={setPrice}
-            />
-          </ScrollView>
+          )}
         </SafeAreaView>
       ) : (
         <ErrorMessage onPress={fetchStock} message={'Something went wrong!'} />
