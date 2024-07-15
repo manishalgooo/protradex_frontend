@@ -56,6 +56,14 @@ const OrderScreen = ({navigation}) => {
           style={style.topTabView(focus === 2)}>
           <Text style={style.topTabText(focus === 2)}>Delivery</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            setFocus(3);
+            dispatch(changeTopTabStatus(false));
+          }}
+          style={style.topTabView(focus === 3)}>
+          <Text style={style.topTabText(focus === 3)}>Options</Text>
+        </TouchableOpacity>
       </View>
       {/* <TopTab /> */}
       <View style={{flex: 1}}>
@@ -67,7 +75,7 @@ const OrderScreen = ({navigation}) => {
 
 const style = StyleSheet.create({
   topTabView: focus => ({
-    width: '50%',
+    width: '33.3%',
     borderBottomWidth: 2,
     borderBottomColor: focus ? color.color_green : color.color_gray,
     justifyContent: 'center',

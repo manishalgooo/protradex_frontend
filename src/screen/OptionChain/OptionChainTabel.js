@@ -6,7 +6,7 @@ import {SelectList} from 'react-native-dropdown-select-list';
 import HorizontalSeperator from '../MatualFunds/Components/HorizontalSeperator';
 import Optionsmodel from './Optionsmodel';
 
-const OptionChainTabel = ({data, symbol}) => {
+const OptionChainTabel = ({data, symbol, navigation}) => {
   const number = -10;
 
   const textColor = number < 0 ? 'red' : 'green';
@@ -47,7 +47,7 @@ const OptionChainTabel = ({data, symbol}) => {
       setSelectedData(groupedData[data?.expiryDates[0]]);
       //   console.log('selectedData :>> ', groupedData[data?.expiryDates[0]]);
     })();
-  }, [data]);
+  }, []);
   const handleChange = value => {
     console.log('Selected value:', value);
     setDate(value);
@@ -129,7 +129,7 @@ const OptionChainTabel = ({data, symbol}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
             }}>
-            <Optionsmodel
+            {/* <Optionsmodel
               isModalVisible={isModalVisibleCE}
               toggleModalCE={toggleModalCE}
               type="CE"
@@ -138,7 +138,7 @@ const OptionChainTabel = ({data, symbol}) => {
               data={selectedData}
               price={row?.CE?.lastPrice}
               StrikePrice={row?.strikePrice}
-            />
+            /> */}
             <TouchableOpacity
               style={{
                 flexDirection: 'row',
@@ -151,7 +151,15 @@ const OptionChainTabel = ({data, symbol}) => {
                 borderColor: color.color_gray,
                 width: '30%',
               }}
-              onPress={toggleModalCE}>
+              onPress={() =>
+                navigation.navigate('Optionchaindetail', {
+                  symbol: symbol,
+                  expiryDate: row?.CE?.expiryDate,
+                  data: selectedData,
+                  price: row?.CE?.lastPrice,
+                  StrikePrice: row?.strikePrice,
+                })
+              }>
               <Text>{row?.CE?.lastPrice}</Text>
 
               <Text
@@ -172,18 +180,27 @@ const OptionChainTabel = ({data, symbol}) => {
               }}>
               <Text>{row?.strikePrice}</Text>
             </View>
-            <View
+            <TouchableOpacity
               style={{
                 flexDirection: 'row',
-                borderWidth: 1,
-                borderColor: color.color_gray,
                 paddingHorizontal: 10,
                 paddingVertical: 10,
                 justifyContent: 'space-between',
                 alignItems: 'center',
                 gap: 5,
+                borderWidth: 1,
+                borderColor: color.color_gray,
                 width: '30%',
-              }}>
+              }}
+              onPress={() =>
+                navigation.navigate('Optionchaindetail', {
+                  symbol: symbol,
+                  expiryDate: row?.PE?.expiryDate,
+                  data: selectedData,
+                  price: row?.PE?.lastPrice,
+                  StrikePrice: row?.strikePrice,
+                })
+              }>
               <Text>{row?.PE?.lastPrice}</Text>
 
               <Text
@@ -193,7 +210,7 @@ const OptionChainTabel = ({data, symbol}) => {
                 ]}>
                 {row?.PE?.change.toFixed(2)}
               </Text>
-            </View>
+            </TouchableOpacity>
           </View>
         ))}
       </ScrollView>

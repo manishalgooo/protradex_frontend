@@ -11,6 +11,9 @@ import priceFormat from '../../utils/priceFormat';
 import OptionChainTabel from './OptionChainTabel';
 import axios from 'axios';
 import {SelectList} from 'react-native-dropdown-select-list';
+import checkNonEmpty from '../../utils/checkNonEmpty';
+import ErrorMessage from '../../component/ErrorMessage/ErrorMessage';
+import Loader from '../../component/Loader/Loader';
 const OPtionChain = ({navigation, route}) => {
   const symbol = route?.params?.symbol;
   const resuly = symbol.replace(/\..*/, '');
@@ -82,9 +85,9 @@ const OPtionChain = ({navigation, route}) => {
       setInstrumentData(instrumentRes);
 
       const res = await getSymbols();
-      console.log('symbols :>> ', res);
       setInitialSymbols([...res]);
       setSymbols([firstSymbol, ...res]);
+      console.log('symbols :>> ', res);
     })();
   }, []);
 
@@ -109,7 +112,7 @@ const OPtionChain = ({navigation, route}) => {
       }
     })();
   }, [selectedInstrument, instrumentData]);
-
+  const [loading, setLoading] = useState(false);
   return (
     <>
       <SafeAreaView style={styles.container}>
@@ -118,7 +121,17 @@ const OPtionChain = ({navigation, route}) => {
         <HorizontalSeperator />
 
         <HorizontalSeperator />
-        <OptionChainTabel symbol={resuly} data={instrumentData?.records} />
+        {loading ? (
+          <Loader loading={loading} />
+        ) : checkNonEmpty(instrumentData) ? (
+          <OptionChainTabel
+            symbol={resuly}
+            data={instrumentData?.records}
+            navigation={navigation}
+          />
+        ) : (
+          <Loader />
+        )}
       </SafeAreaView>
     </>
   );

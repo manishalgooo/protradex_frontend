@@ -56,6 +56,7 @@ import Deposit from '../screen/Deposit/Deposit';
 import Withdrawal from '../screen/Withdrawal/Withdrawal';
 import Submited from '../screen/Submited/Submited';
 import Chart from '../screen/Chart/Chart';
+import OptionDetail from '../screen/OptionChain/OptionChianDetail';
 
 export const Auth = () => {
   const Stack = createNativeStackNavigator();
@@ -149,6 +150,7 @@ export const MainStack = () => {
       <Stack.Screen name="Chart" component={Chart} />
 
       <Stack.Screen name="MCXMaket" component={MCX} />
+      <Stack.Screen name="Optionchaindetail" component={OptionDetail} />
       <Stack.Screen name="Submited" component={Submited} />
 
       <Stack.Screen name="Futures" component={Futures} />

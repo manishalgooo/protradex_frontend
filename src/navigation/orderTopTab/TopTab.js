@@ -5,10 +5,12 @@ import {color} from '../../common/color';
 import Intraday from '../orderTopTab/Intraday';
 import Delivery from '../orderTopTab/Delivery';
 import {SceneMap, TabBar, TabView} from 'react-native-tab-view';
+import Option from '../orderTopTab/Option';
 
 const renderScene = SceneMap({
   intraday: Intraday,
   delivery: Delivery,
+  optoin: Option,
 });
 
 const renderTabBar = props => {
