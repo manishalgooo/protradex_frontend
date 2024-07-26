@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import Appheader from '../../component/AppHeader/appheader';
 import {styles} from './styles';
+import WebView from 'react-native-webview';
 
 const MCX = ({navigation}) => {
   return (
