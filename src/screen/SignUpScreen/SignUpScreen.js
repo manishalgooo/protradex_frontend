@@ -103,6 +103,7 @@ const SignUpScreen = ({props, navigation}) => {
             placeholder="Password"
             onChangeText={newText => setPassword(newText)}
             defaultValue={password}
+            
             svg={Password}
           />
           <View style={styles.subcontainer}>

@@ -8,11 +8,10 @@ import {
 } from 'react-native';
 import React from 'react';
 import {styles} from './styles';
-import Splashlogo from '../../../assets/svg/splashlogo';
+// import Splashlogo from '../../../assets/svg/splashlogo';
 import CustomButton from '../../component/buttons/CustomButton';
 // import AppLogo from '../../../assets/bootsplash_logo.png';
-import AppLogo from '../../../assets/logo.jpg';
-
+import TradexLogo from '../../../assets/Tradex_Pro.png'
 import Seperator from '../../component/Seperator/Seperator';
 
 const SplashScreen = ({props, navigation}) => {
@@ -22,7 +21,7 @@ const SplashScreen = ({props, navigation}) => {
         {/* <Splashlogo /> */}
         <Text style={styles.welcome}>Welcome to</Text>
         <Seperator seperate={10} />
-        <Image style={{height: 150, width: 367}} source={AppLogo} />
+        <Image style={{width: 200, height: 150, resizeMode:`contain`}} source={TradexLogo} />
       </View>
       <View style={styles.subcontainer}>
         <CustomButton

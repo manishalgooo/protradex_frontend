@@ -4,13 +4,13 @@ import { Picker } from '@react-native-picker/picker';
 import Appheader from '../../component/AppHeader/appheader';
 import axios from 'axios';
 import { color } from '../../common/color';
-import OptionChainComodity from '../../component/CustomModal/OptionChainComodity';
+import OptionChainComodity from "../../component/CustomModal/CustomSellModal";
 import { font } from '../../common/Font';
 import { STOCK } from '../../utils/baseURL';
-import DisplayShowDetails from '../../component/CustomModal/DisplayShowDetails';
-import SearchableDataList from '../../component/CustomSearchview/SearchableDataList';
-
-const MCX = ({ navigation }: any) => {
+// import DisplayShowDetails from '../../component/CustomModal/CustomSellModal';
+// import SearchableDataList from '../../component/CustomSearchview/SearchableDataList';
+// ../../component/CustomModal/OptionChainComodity
+const MCX = ({ navigation }) => {
   const [commodityArray, setCommodityArray] = useState([]);
   const staticExpDates = {
     COPPER: '21AUG2024',
@@ -23,10 +23,10 @@ const MCX = ({ navigation }: any) => {
     SILVER: '27AUG2024',
     SILVERM: '21AUG2024',
     ZINC: '21AUG2024',
-  } as any;
+  };
   const [commodity, setCommodity] = useState('');
   const [exp, setExp] = useState('');
-  const [marketData, setMarketData] = useState<any[]>([]);
+  const [marketData, setMarketData] = useState<any>([]);
   const [selectedCommodity, setSelectedCommodity] = useState('');
   const [selectedExpiry, setSelectedExpiry] = useState('21AUG2024');
   const [error, setError] = useState<string | null>(null);
@@ -43,7 +43,7 @@ const MCX = ({ navigation }: any) => {
   const [liveData, setLiveData] = useState();
 
   // Function to handle item selection
-  const handleItemSelect = (selectedItem: any) => {
+  const handleItemSelect = (selectedItem) => {
     // You can do whatever you need with the selected item data
     // Alert.alert('Selected Item', JSON.stringify(selectedItem, null, 2));
     // You can also navigate to another screen or pass this data to a parent component
@@ -73,8 +73,8 @@ const MCX = ({ navigation }: any) => {
   const commodities = ['COPPER', 'CRUDEOIL', 'CRUDEOILM', 'GOLD', 'GOLDM', 'NATGASMINI', 'NATURALGAS', 'SILVER', 'SILVERM', 'ZINC'];
 
   const baseURL = "https://query1.finance.yahoo.com/v8/finance/chart/";
-  const [volume, setVolumes] = useState(null) as any;
-  const fetchSymbolData = async (symbol: any) => {
+  const [volume, setVolumes] = useState(null);
+  const fetchSymbolData = async (symbol) => {
     try {
       const response = await fetch(`${baseURL}${symbol}`);
       const data = await response.json();
@@ -86,7 +86,7 @@ const MCX = ({ navigation }: any) => {
       return null;
     }
   };
-  const [price, setPrice] = useState(0) as any;
+  const [price, setPrice] = useState(0);
 
   const fetchAllSymbolsData = async () => {
     const promises = symbols.map(fetchSymbolData);
@@ -113,7 +113,7 @@ const MCX = ({ navigation }: any) => {
   //   return () => clearInterval(interval);
   // }, [liveData]);
 
-  const apiCall = async (url: string, data: any) => {
+  const apiCall = async (url, data) => {
     try {
       const response = await axios.post(url, data, {
         headers: {
@@ -127,7 +127,7 @@ const MCX = ({ navigation }: any) => {
       throw error;
     }
   };
-  const extractBeforeNumber = (str: any) => {
+  const extractBeforeNumber = (str) => {
     if (typeof str !== 'string') return '';
 
     // Regular expression to match all characters before the first number
@@ -155,7 +155,7 @@ const MCX = ({ navigation }: any) => {
     setModalVisible(!isModalVisible);
   };
 
-  const handleBuySell = (option: any, action: 'BUY' | 'SELL') => {
+  const handleBuySell = (option, action = 'BUY' | 'SELL') => {
     setSelectedOption(option);
     setPrice(action === 'BUY' ? option.CE_LTP : option.PE_LTP);
     setIsColor(action === 'BUY' ? color.color_darkblue : color.color_red);
@@ -163,9 +163,9 @@ const MCX = ({ navigation }: any) => {
     setModalVisible(true);
   };
 
-  const getTextStyle = (value: number | string | null) => {
+  const getTextStyle = (value) => {
     if (value === null || value === undefined) return {};
-    const numericValue = parseFloat(value as string);
+    const numericValue = parseFloat(value);
     return numericValue > 0
       ? { color: 'green' }
       : numericValue < 0
@@ -175,7 +175,7 @@ const MCX = ({ navigation }: any) => {
 
 
 
-  const renderItem = ({ item }: { item: any }) => (
+  const renderItem = ({ item }) => (
     <View style={tableStyles.row}>
       <TouchableOpacity onPress={() => handleBuySell(item, 'BUY')} style={tableStyles.cellContainer}>
         <Text style={tableStyles.cell}>
@@ -198,7 +198,7 @@ const MCX = ({ navigation }: any) => {
 
 
   //IMPR
-  const fetchMarketData = async (payload:any) => {
+  const fetchMarketData = async (payload) => {
     if (!payload) {
       return;
     }
@@ -261,7 +261,7 @@ useEffect(() => {
 
   console.log("selected Commodity ---- ", commodityData?.symTicker)
 
-  const getPriceChangeText = (lp: any, open_price: any) => {
+  const getPriceChangeText = (lp, open_price) => {
     const change = lp - open_price;
     const percentChange = ((change / open_price) * 100).toFixed(2);
     const color = change > 0 ? 'green' : 'red';
@@ -445,8 +445,8 @@ useEffect(() => {
         leadtext={istext}
         onPriceChange={price}
         commodityName={selectedCommodity}
-
       />
+       
     </ScrollView>
   );
 };
