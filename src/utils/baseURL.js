@@ -1,6 +1,7 @@
 // const baseURL = 'https://papertrading-qrht.onrender.com';
 // const baseURL = 'https://paper-trading-server.onrender.com';
-const baseURL = 'https://vertex-fx.onrender.com';
+// https://vertex-fx.onrender.com
+const baseURL = 'https://protradex-backend.onrender.com';
 
 export const AUTH = {
   REGISTER: `${baseURL}/user/register`,

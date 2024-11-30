@@ -42,6 +42,7 @@ const PostAPI = {
           url: AUTH.REGISTER,
           data,
         };
+        console.log(config);
         const results = await axios(config);
         StorageItems.storeUserToken(results.data.token);
         console.log(results.data);
