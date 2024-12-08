@@ -7,6 +7,7 @@ import HorizontalSeperator from '../MatualFunds/Components/HorizontalSeperator';
 import Optionsmodel from './Optionsmodel';
 
 const OptionChainTabel = ({data, symbol, navigation}) => {
+  console.log(data, symbol, navigation);
   const number = -10;
 
   const textColor = number < 0 ? 'red' : 'green';

@@ -4,12 +4,11 @@ import { Picker } from '@react-native-picker/picker';
 import Appheader from '../../component/AppHeader/appheader';
 import axios from 'axios';
 import { color } from '../../common/color';
-import OptionChainComodity from "../../component/CustomModal/CustomSellModal";
+import OptionChainComodity from '../../component/CustomModal/OptionChainbuy';
 import { font } from '../../common/Font';
 import { STOCK } from '../../utils/baseURL';
-// import DisplayShowDetails from '../../component/CustomModal/CustomSellModal';
-// import SearchableDataList from '../../component/CustomSearchview/SearchableDataList';
-// ../../component/CustomModal/OptionChainComodity
+import DisplayShowDetails from '../../component/CustomModal/CustomSellModal';
+import SearchableDataList from '../../component/CustomSearchview/CustomSearch';
 const MCX = ({ navigation }) => {
   const [commodityArray, setCommodityArray] = useState([]);
   const staticExpDates = {
@@ -26,17 +25,17 @@ const MCX = ({ navigation }) => {
   };
   const [commodity, setCommodity] = useState('');
   const [exp, setExp] = useState('');
-  const [marketData, setMarketData] = useState<any>([]);
+  const [marketData, setMarketData] = useState([]);
   const [selectedCommodity, setSelectedCommodity] = useState('');
   const [selectedExpiry, setSelectedExpiry] = useState('21AUG2024');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setModalVisible] = useState(false);
   const [iscolor, setIsColor] = useState('');
   const [rePrice, setRePrice] = useState('');
   const [istext, setIsText] = useState('BUY');
-  const [selectedOption, setSelectedOption] = useState<any>(null);
-  const [commodityData, setCommodityData] = useState<any>(null);
+  const [selectedOption, setSelectedOption] = useState(null);
+  const [commodityData, setCommodityData] = useState(null);
   const [isOptionShow, setIsOption] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 

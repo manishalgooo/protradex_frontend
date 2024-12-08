@@ -37,7 +37,7 @@ const MarketDepthData = ({symbol}) => {
           },
         },
       );
-
+      clg
       if (!res.ok) {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }

@@ -32,8 +32,8 @@ const OPtionChain = ({navigation, route}) => {
   const [selected, setSelected] = useState('');
   const getSymbols = async () => {
     try {
-      const res = await fetch(
-        `https://option-chain-data.onrender.com/symbols`,
+      const res = await fetch( 
+        `https://option-chain-data.onrender.com/${symbol}`,
         {
           method: 'GET',
           headers: {
@@ -47,6 +47,7 @@ const OPtionChain = ({navigation, route}) => {
       }
 
       const data = await res.json();
+      console.log('data :>> ', data);
       return data;
     } catch (error) {
       console.error('Error fetching symbol list:', error);
@@ -70,6 +71,7 @@ const OPtionChain = ({navigation, route}) => {
       }
 
       const data = await res.json();
+      console.log('data :>> ', data);
       return data;
     } catch (error) {
       console.error('Error fetching index or symbol detail:', error);
@@ -83,7 +85,6 @@ const OPtionChain = ({navigation, route}) => {
         'index',
       );
       setInstrumentData(instrumentRes);
-
       const res = await getSymbols();
       setInitialSymbols([...res]);
       setSymbols([firstSymbol, ...res]);
