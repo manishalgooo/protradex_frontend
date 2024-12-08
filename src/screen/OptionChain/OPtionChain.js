@@ -33,7 +33,7 @@ const OPtionChain = ({navigation, route}) => {
   const getSymbols = async () => {
     try {
       const res = await fetch( 
-        `https://option-chain-data.onrender.com/${symbol}`,
+        `https://option-chain-data.onrender.com/symbols`,
         {
           method: 'GET',
           headers: {
